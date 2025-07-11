@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merchant Application | BlockchainMall.org</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Define color palette */
+            --lime: #ECF1AF;
+            --leafy-green: #0A4646;
+            --cool-white: #D7E8FA;
+            --charcoal: #76542C;
+            --lime-green: #5DF9C0;
+            --ocean-blue: #3B1EFF;
+            --maroon: #3C1919;
+            --fresh-meat: #EEA39D;
+            --sandy: #FFD7C0;
+            --calm-white: #FBF1F0;
+            --cocoa: #966336;
+            --vibrant-orange: #E35314;
+            --navy-green: #164147;
+            --brass: #956D37;
+            --wood: #DDC09F;
+            --mocha: #2D2A24;
+            --card-bg-light: rgba(255, 255, 255, 0.15);
+            --card-border-light: rgba(255, 255, 255, 0.3);
+            --pop-up-bg: rgba(255, 255, 255, 0.1);
+            --pop-up-border: rgba(255, 255, 255, 0.3);
+            
+            /* Light mode variables */
+            --bg-primary: linear-gradient(135deg, var(--leafy-green) 0%, var(--navy-green) 50%, var(--mocha) 100%);
+            --text-primary: var(--calm-white);
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --card-border: rgba(255, 255, 255, 0.2);
+            --search-bg: rgba(255, 255, 255, 0.15);
+            --search-border: rgba(255, 255, 255, 0.3);
+            --search-text: var(--calm-white);
+            --icon-color: var(--lime-green);
+        }
+
+        body.light-mode {
+            --bg-primary: linear-gradient(135deg, #e0f7fa 0%, #f5f5f5 50%, #fafafa 100%);
+            --text-primary: #333333;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(0, 0, 0, 0.1);
+            --search-bg: rgba(255, 255, 255, 0.9);
+            --search-border: rgba(0, 0, 0, 0.1);
+            --search-text: #333333;
+            --icon-color: var(--ocean-blue);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 18px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            padding-top: 50px;
+            line-height: 1.7;
+            transition: background 0.5s ease, color 0.5s ease;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', 'Segoe UI', sans-serif;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        /* Glassmorphism utility class */
+        .glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation - Improved styling */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 30px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--lime-green), var(--vibrant-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            font-family: 'Montserrat', sans-serif;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: rgba(93, 249, 192, 0.15);
+            border-radius: 30px;
+            color: var(--lime-green);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .back-button:hover {
+            background: rgba(93, 249, 192, 0.3);
+            transform: translateY(-3px);
+        }
+
+        /* Hero Section */
+        .hero-form {
+            padding: 100px 0 50px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-form h1 {
+            font-size: 3.5rem;
+            margin-bottom: 25px;
+            background: linear-gradient(45deg, var(--lime), var(--lime-green), var(--vibrant-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textGlow 3s ease-in-out infinite alternate;
+            line-height: 1.1;
+            font-weight: 800;
+        }
+
+        .hero-form p {
+            font-size: 1.2rem;
+            margin-bottom: 35px;
+            color: var(--cool-white);
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* Form styling */
+        .form-container {
+            max-width: 900px;
+            margin: 0 auto 80px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+            padding: 35px;
+            transition: all 0.5s ease;
+        }
+
+        .form-section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(93, 249, 192, 0.3);
+        }
+
+        .form-section-header i {
+            font-size: 1.8rem;
+            color: var(--lime-green);
+        }
+
+        .form-section-header h2 {
+            font-size: 2rem;
+            color: var(--lime);
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            flex: 1 1 300px;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--sandy);
+        }
+
+        .form-group .hint {
+            font-size: 0.85rem;
+            color: var(--cool-white);
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: var(--calm-white);
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        /* Enhanced dropdown styling */
+        select {
+            background: rgba(0, 0, 0, 0.8) !important;
+            color: var(--lime-green) !important;
+        }
+
+        select option {
+            background: #000;
+            color: var(--lime-green);
+            padding: 10px;
+        }
+
+        select option:hover {
+            background: var(--lime-green) !important;
+            color: #000 !important;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--lime-green);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(93, 249, 192, 0.3);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 15px;
+            transition: background 0.3s;
+        }
+
+        .checkbox-group:hover {
+            background: rgba(93, 249, 192, 0.1);
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-top: 5px;
+            width: 20px;
+            height: 20px;
+            accent-color: var(--lime-green);
+        }
+
+        .checkbox-group label {
+            flex: 1;
+            font-size: 0.95rem;
+        }
+
+        .checkbox-group label a {
+            color: var(--lime-green);
+            text-decoration: none;
+        }
+
+        .checkbox-group label a:hover {
+            text-decoration: underline;
+        }
+
+        .submit-section {
+            text-align: center;
+            padding-top: 20px;
+        }
+
+        .submit-button {
+            padding: 16px 45px;
+            background: linear-gradient(45deg, var(--lime-green), var(--ocean-blue));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-size: 1.2rem;
+            margin-top: 20px;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(93, 249, 192, 0.3);
+        }
+
+        .submit-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-button:hover::before {
+            left: 100%;
+        }
+
+        /* Agreement buttons */
+        .agreement-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .agreement-button {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(93, 249, 192, 0.1);
+            border: 1px solid var(--lime-green);
+            border-radius: 50px;
+            color: var(--lime-green);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .agreement-button:hover {
+            background: rgba(93, 249, 192, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(93, 249, 192, 0.2);
+        }
+
+        .agreement-button i {
+            margin-right: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .agreement-button:hover i {
+            transform: scale(1.2);
+        }
+
+        /* Floating elements */
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, var(--lime-green), transparent);
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, var(--vibrant-orange), transparent);
+            top: 60%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .floating-element:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, var(--ocean-blue), transparent);
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 40px 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bottom {
+            padding-top: 20px;
+            opacity: 0.6;
+            font-size: 1rem;
+        }
+
+        /* Help button */
+        .help-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--lime-green);
+            color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .help-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(93, 249, 192, 0.5);
+        }
+
+        /* Help modal */
+        .help-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .help-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .help-modal .modal-content {
+            max-width: 500px;
+            width: 90%;
+            padding: 30px;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .help-modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .help-modal .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--lime-green);
+            transition: all 0.3s ease;
+        }
+
+        .help-modal .close-modal:hover {
+            transform: rotate(90deg);
+        }
+
+        .help-modal h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--lime);
+        }
+
+        .help-modal ul {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .help-modal ul li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .help-modal ul li i {
+            font-size: 1.2rem;
+            color: var(--lime-green);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes textGlow {
+            from {
+                text-shadow: 0 0 20px rgba(93, 249, 192, 0.5);
+            }
+            to {
+                text-shadow: 0 0 30px rgba(93, 249, 192, 0.8), 0 0 40px rgba(227, 83, 20, 0.3);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.7;
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        /* Loading animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--leafy-green), var(--navy-green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-spinner::before,
+        .loading-spinner::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 6px solid transparent;
+            border-top-color: var(--lime-green);
+            animation: spin-star 1.5s infinite ease-in-out;
+        }
+
+        .loading-spinner::after {
+            border-top-color: var(--vibrant-orange);
+            animation-delay: 0.75s;
+            transform: rotate(45deg);
+        }
+
+        @keyframes spin-star {
+            0% {
+                transform: rotate(0deg);
+            }
+            50% {
+                transform: rotate(225deg);
+                border-top-color: var(--ocean-blue);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Success message */
+        .success-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--card-border);
+            border-radius: 25px;
+            padding: 50px;
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .success-message.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .success-message i {
+            font-size: 4rem;
+            color: var(--lime-green);
+            margin-bottom: 25px;
+            animation: pulse 1.5s infinite;
+        }
+
+        .success-message h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--lime);
+        }
+
+        .success-message p {
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-form h1 {
+                font-size: 2.5rem;
+            }
+            
+            .form-section {
+                padding: 25px 20px;
+            }
+            
+            .form-section-header h2 {
+                font-size: 1.6rem;
+            }
+            
+            .form-row {
+                gap: 15px;
+            }
+            
+            .form-group {
+                flex: 1 1 100%;
+            }
+
+            .agreement-buttons {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-form h1 {
+                font-size: 2rem;
+            }
+            
+            .form-section-header h2 {
+                font-size: 1.4rem;
+            }
+            
+            .submit-button {
+                width: 100%;
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading overlay -->
+    <div class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Success message -->
+    <div class="success-message glass">
+        <i class="fas fa-check-circle"></i>
+        <h2>Application Submitted!</h2>
+        <p>Thank you for applying to BlockchainMall.org. Your application is being reviewed and we'll contact you within 72 hours.</p>
+        <a href="index.html" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+
+    <!-- Help Button -->
+    <div class="help-button">
+        <i class="fas fa-question"></i>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="help-modal">
+        <div class="modal-content glass">
+            <span class="close-modal"><i class="fas fa-times"></i></span>
+            <h2><i class="fas fa-headset"></i> Merchant Application Help</h2>
+            <p>Need help filling out the form? Contact our support team:</p>
+            <ul>
+                <li><i class="fas fa-envelope"></i> Email: support@blockchainmall.org</li>
+                <li><i class="fab fa-telegram"></i> Telegram: @BlockchainMallSupport</li>
+                <li><i class="fas fa-phone"></i> Phone: +1 (800) 123-4567</li>
+            </ul>
+            <p>We're here to assist you 24/7.</p>
+        </div>
+    </div>
+
+    <!-- Floating elements -->
+    <div class="floating-elements">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar glass">
+        <a href="index.html" class="logo">BlockchainMall.org</a>
+        <a href="index.html" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </nav>
+
+    <!-- Hero section -->
+    <section class="hero-form">
+        <div class="container">
+            <div class="hero-content fade-in">
+                <h1>Become a BlockchainMall Merchant</h1>
+                <p>Join our premium marketplace to showcase your products to a global audience. Enjoy secure payments, low fees, and the power of blockchain technology.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Application Form -->
+    <div class="container">
+        <form class="form-container" id="merchant-form">
+            <!-- Section 1: Business Identity -->
+            <div class="form-section glass fade-in">
+                <div class="form-section-header">
+                    <i class="fas fa-building"></i>
+                    <h2>Business Identity</h2>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="store-name">Store or Brand Name *</label>
+                        <input type="text" id="store-name" name="store-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="merchant-type">Type of Merchant *</label>
+                        <select id="merchant-type" name="merchant-type" required>
+                            <option value="">Select type</option>
+                            <option value="individual">Individual</option>
+                            <option value="company">Company</option>
+                            <option value="manufacturer">Manufacturer</option>
+                            <option value="digital">Digital Seller</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="business-category">Business Category *</label>
+                        <select id="business-category" name="business-category" required>
+                            <option value="">Select category</option>
+                            <option value="fashion">Fashion & Apparel</option>
+                            <option value="electronics">Electronics & Gadgets</option>
+                            <option value="beauty">Beauty, Health & Wellness</option>
+                            <option value="home">Home, Living & Furniture</option>
+                            <option value="food">Food & Beverages</option>
+                            <option value="digital">Digital Products & Software</option>
+                            <option value="jewelry">Jewelry & Luxury Accessories</option>
+                            <option value="art">Art, Crafts & Collectibles</option>
+                            <option value="mobile">Mobile Phones & Accessories</option>
+                            <option value="auto">Automotive & Machinery</option>
+                            <option value="kids">Kids, Toys & Baby Products</option>
+                            <option value="books">Books, Stationery & Education</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="country">Country of Operation *</label>
+                        <select id="country" name="country" required>
+                            <option value="">Select country</option>
+                            <!-- Countries will be populated by JavaScript -->
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="registration-number">Business Registration Number</label>
+                        <input type="text" id="registration-number" name="registration-number">
+                        <div class="hint">(Required for registered companies)</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="website-url">Website URL</label>
+                        <input type="url" id="website-url" name="website-url" placeholder="https://">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="years-operation">Years in Operation *</label>
+                        <select id="years-operation" name="years-operation" required>
+                            <option value="">Select years</option>
+                            <option value="0">Just starting</option>
+                            <option value="1">1 year</option>
+                            <option value="2">2 years</option>
+                            <option value="3">3 years</option>
+                            <option value="4">4 years</option>
+                            <option value="5">5+ years</option>
+                            <option value="10">10+ years</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section 2: Founder Details -->
+            <div class="form-section glass fade-in">
+                <div class="form-section-header">
+                    <i class="fas fa-user-tie"></i>
+                    <h2>Founder Details</h2>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="full-name">Full Name *</label>
+                        <input type="text" id="full-name" name="full-name" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact">WhatsApp or Telegram Contact *</label>
+                        <input type="text" id="contact" name="contact" required>
+                        <div class="hint">Include country code</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="alt-contact">Alternate Contact Number</label>
+                        <input type="tel" id="alt-contact" name="alt-contact">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="linkedin">LinkedIn Profile or Professional Website</label>
+                        <input type="url" id="linkedin" name="linkedin" placeholder="https://">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section 3: Store Bio -->
+            <div class="form-section glass fade-in">
+                <div class="form-section-header">
+                    <i class="fas fa-store"></i>
+                    <h2>Store Bio</h2>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="brand-bio">Short Brand Bio *</label>
+                        <textarea id="brand-bio" name="brand-bio" maxlength="250" required></textarea>
+                        <div class="hint">Briefly share your vision or what makes your brand unique (max 250 characters)</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="brand-logo">Upload Brand Logo</label>
+                        <input type="file" id="brand-logo" name="brand-logo" accept="image/*">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="promo-media">Upload Additional Media</label>
+                        <input type="file" id="promo-media" name="promo-media" accept="image/*,video/*">
+                        <div class="hint">Images or short promo video</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section 4: Payout Preference -->
+            <div class="form-section glass fade-in">
+                <div class="form-section-header">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <h2>Payout Preference</h2>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="payout-method">Preferred Payment Method *</label>
+                        <select id="payout-method" name="payout-method" required>
+                            <option value="">Select method</option>
+                            <option value="usdt">USDT (Tether)</option>
+                            <option value="mastercard">MasterCard</option>
+                            <option value="visa">Visa Card</option>
+                            <option value="amex">Amex (American Express)</option>
+                            <option value="zarraz">Zarraz Dollar (Available only for best-performing merchants)</option>
+                        </select>
+                        <div class="hint">Note: Wallet or account details for payouts will be added and managed securely within your merchant dashboard after approval.</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="payout-frequency">Payout Frequency</label>
+                        <select id="payout-frequency" name="payout-frequency" disabled>
+                            <option value="weekly">Once a week (default)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section 5: Agreement & Trust -->
+            <div class="form-section glass fade-in">
+                <div class="form-section-header">
+                    <i class="fas fa-file-contract"></i>
+                    <h2>Agreement & Trust</h2>
+                </div>
+                
+                <div class="form-row">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms">I agree to BlockchainMall.org's policies and terms</label>
+                    </div>
+                    
+                    <div class="agreement-buttons">
+                        <a href="#" class="agreement-button">
+                            <i class="fas fa-file-alt"></i> Merchant Terms
+                        </a>
+                        <a href="#" class="agreement-button">
+                            <i class="fas fa-shield-alt"></i> Privacy Policy
+                        </a>
+                        <a href="#" class="agreement-button">
+                            <i class="fas fa-star"></i> Code of Excellence
+                        </a>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="gdpr" name="gdpr">
+                        <label for="gdpr">I consent to the processing of my data according to GDPR/Data Protection regulations (If applicable)</label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="crypto-payout" name="crypto-payout">
+                        <label for="crypto-payout">I understand crypto payouts require wallet verification in my merchant dashboard before first settlement</label>
+                    </div>
+                </div>
+                
+                <div class="form-group" style="margin-top: 20px;">
+                    <div class="hint"><i class="fas fa-lock"></i> Your data is encrypted. Approval is done within <strong>72 hours</strong>.</div>
+                </div>
+            </div>
+            
+            <!-- Section 6: Submission -->
+            <div class="form-section glass fade-in submit-section">
+                <div class="form-group">
+                    <div class="hint" style="margin-bottom: 20px; text-align: center;">
+                        <i class="fas fa-shield-alt"></i> All information is securely encrypted
+                    </div>
+                    <button type="submit" class="submit-button">
+                        <i class="fas fa-paper-plane"></i> Submit Application
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 BlockchainMall.org. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadingOverlay = document.querySelector('.loading-overlay');
+            const form = document.getElementById('merchant-form');
+            const successMessage = document.querySelector('.success-message');
+            const fadeInElements = document.querySelectorAll('.fade-in');
+            const helpButton = document.querySelector('.help-button');
+            const helpModal = document.querySelector('.help-modal');
+            const closeModal = document.querySelector('.close-modal');
+            
+            // Country list (195 ISO countries including Uganda)
+            const countries = [
+                { code: 'AF', name: 'Afghanistan' },
+                { code: 'AX', name: 'Åland Islands' },
+                { code: 'AL', name: 'Albania' },
+                { code: 'DZ', name: 'Algeria' },
+                { code: 'AS', name: 'American Samoa' },
+                { code: 'AD', name: 'Andorra' },
+                { code: 'AO', name: 'Angola' },
+                { code: 'AI', name: 'Anguilla' },
+                { code: 'AQ', name: 'Antarctica' },
+                { code: 'AG', name: 'Antigua and Barbuda' },
+                { code: 'AR', name: 'Argentina' },
+                { code: 'AM', name: 'Armenia' },
+                { code: 'AW', name: 'Aruba' },
+                { code: 'AU', name: 'Australia' },
+                { code: 'AT', name: 'Austria' },
+                { code: 'AZ', name: 'Azerbaijan' },
+                { code: 'BS', name: 'Bahamas' },
+                { code: 'BH', name: 'Bahrain' },
+                { code: 'BD', name: 'Bangladesh' },
+                { code: 'BB', name: 'Barbados' },
+                { code: 'BY', name: 'Belarus' },
+                { code: 'BE', name: 'Belgium' },
+                { code: 'BZ', name: 'Belize' },
+                { code: 'BJ', name: 'Benin' },
+                { code: 'BM', name: 'Bermuda' },
+                { code: 'BT', name: 'Bhutan' },
+                { code: 'BO', name: 'Bolivia' },
+                { code: 'BQ', name: 'Bonaire, Sint Eustatius and Saba' },
+                { code: 'BA', name: 'Bosnia and Herzegovina' },
+                { code: 'BW', name: 'Botswana' },
+                { code: 'BV', name: 'Bouvet Island' },
+                { code: 'BR', name: 'Brazil' },
+                { code: 'IO', name: 'British Indian Ocean Territory' },
+                { code: 'BN', name: 'Brunei Darussalam' },
+                { code: 'BG', name: 'Bulgaria' },
+                { code: 'BF', name: 'Burkina Faso' },
+                { code: 'BI', name: 'Burundi' },
+                { code: 'CV', name: 'Cabo Verde' },
+                { code: 'KH', name: 'Cambodia' },
+                { code: 'CM', name: 'Cameroon' },
+                { code: 'CA', name: 'Canada' },
+                { code: 'KY', name: 'Cayman Islands' },
+                { code: 'CF', name: 'Central African Republic' },
+                { code: 'TD', name: 'Chad' },
+                { code: 'CL', name: 'Chile' },
+                { code: 'CN', name: 'China' },
+                { code: 'CX', name: 'Christmas Island' },
+                { code: 'CC', name: 'Cocos (Keeling) Islands' },
+                { code: 'CO', name: 'Colombia' },
+                { code: 'KM', name: 'Comoros' },
+                { code: 'CG', name: 'Congo' },
+                { code: 'CD', name: 'Congo (Democratic Republic)' },
+                { code: 'CK', name: 'Cook Islands' },
+                { code: 'CR', name: 'Costa Rica' },
+                { code: 'CI', name: "Côte d'Ivoire" },
+                { code: 'HR', name: 'Croatia' },
+                { code: 'CU', name: 'Cuba' },
+                { code: 'CW', name: 'Curaçao' },
+                { code: 'CY', name: 'Cyprus' },
+                { code: 'CZ', name: 'Czechia' },
+                { code: 'DK', name: 'Denmark' },
+                { code: 'DJ', name: 'Djibouti' },
+                { code: 'DM', name: 'Dominica' },
+                { code: 'DO', name: 'Dominican Republic' },
+                { code: 'EC', name: 'Ecuador' },
+                { code: 'EG', name: 'Egypt' },
+                { code: 'SV', name: 'El Salvador' },
+                { code: 'GQ', name: 'Equatorial Guinea' },
+                { code: 'ER', name: 'Eritrea' },
+                { code: 'EE', name: 'Estonia' },
+                { code: 'SZ', name: 'Eswatini' },
+                { code: 'ET', name: 'Ethiopia' },
+                { code: 'FK', name: 'Falkland Islands (Malvinas)' },
+                { code: 'FO', name: 'Faroe Islands' },
+                { code: 'FJ', name: 'Fiji' },
+                { code: 'FI', name: 'Finland' },
+                { code: 'FR', name: 'France' },
+                { code: 'GF', name: 'French Guiana' },
+                { code: 'PF', name: 'French Polynesia' },
+                { code: 'TF', name: 'French Southern Territories' },
+                { code: 'GA', name: 'Gabon' },
+                { code: 'GM', name: 'Gambia' },
+                { code: 'GE', name: 'Georgia' },
+                { code: 'DE', name: 'Germany' },
+                { code: 'GH', name: 'Ghana' },
+                { code: 'GI', name: 'Gibraltar' },
+                { code: 'GR', name: 'Greece' },
+                { code: 'GL', name: 'Greenland' },
+                { code: 'GD', name: 'Grenada' },
+                { code: 'GP', name: 'Guadeloupe' },
+                { code: 'GU', name: 'Guam' },
+                { code: 'GT', name: 'Guatemala' },
+                { code: 'GG', name: 'Guernsey' },
+                { code: 'GN', name: 'Guinea' },
+                { code: 'GW', name: 'Guinea-Bissau' },
+                { code: 'GY', name: 'Guyana' },
+                { code: 'HT', name: 'Haiti' },
+                { code: 'HM', name: 'Heard Island and McDonald Islands' },
+                { code: 'VA', name: 'Holy See' },
+                { code: 'HN', name: 'Honduras' },
+                { code: 'HK', name: 'Hong Kong' },
+                { code: 'HU', name: 'Hungary' },
+                { code: 'IS', name: 'Iceland' },
+                { code: 'IN', name: 'India' },
+                { code: 'ID', name: 'Indonesia' },
+                { code: 'IR', name: 'Iran' },
+                { code: 'IQ', name: 'Iraq' },
+                { code: 'IE', name: 'Ireland' },
+                { code: 'IM', name: 'Isle of Man' },
+                { code: 'IL', name: 'Israel' },
+                { code: 'IT', name: 'Italy' },
+                { code: 'JM', name: 'Jamaica' },
+                { code: 'JP', name: 'Japan' },
+                { code: 'JE', name: 'Jersey' },
+                { code: 'JO', name: 'Jordan' },
+                { code: 'KZ', name: 'Kazakhstan' },
+                { code: 'KE', name: 'Kenya' },
+                { code: 'KI', name: 'Kiribati' },
+                { code: 'KP', name: "Korea (Democratic People's Republic)" },
+                { code: 'KR', name: 'Korea (Republic of)' },
+                { code: 'KW', name: 'Kuwait' },
+                { code: 'KG', name: 'Kyrgyzstan' },
+                { code: 'LA', name: "Lao People's Democratic Republic" },
+                { code: 'LV', name: 'Latvia' },
+                { code: 'LB', name: 'Lebanon' },
+                { code: 'LS', name: 'Lesotho' },
+                { code: 'LR', name: 'Liberia' },
+                { code: 'LY', name: 'Libya' },
+                { code: 'LI', name: 'Liechtenstein' },
+                { code: 'LT', name: 'Lithuania' },
+                { code: 'LU', name: 'Luxembourg' },
+                { code: 'MO', name: 'Macao' },
+                { code: 'MG', name: 'Madagascar' },
+                { code: 'MW', name: 'Malawi' },
+                { code: 'MY', name: 'Malaysia' },
+                { code: 'MV', name: 'Maldives' },
+                { code: 'ML', name: 'Mali' },
+                { code: 'MT', name: 'Malta' },
+                { code: 'MH', name: 'Marshall Islands' },
+                { code: 'MQ', name: 'Martinique' },
+                { code: 'MR', name: 'Mauritania' },
+                { code: 'MU', name: 'Mauritius' },
+                { code: 'YT', name: 'Mayotte' },
+                { code: 'MX', name: 'Mexico' },
+                { code: 'FM', name: 'Micronesia' },
+                { code: 'MD', name: 'Moldova' },
+                { code: 'MC', name: 'Monaco' },
+                { code: 'MN', name: 'Mongolia' },
+                { code: 'ME', name: 'Montenegro' },
+                { code: 'MS', name: 'Montserrat' },
+                { code: 'MA', name: 'Morocco' },
+                { code: 'MZ', name: 'Mozambique' },
+                { code: 'MM', name: 'Myanmar' },
+                { code: 'NA', name: 'Namibia' },
+                { code: 'NR', name: 'Nauru' },
+                { code: 'NP', name: 'Nepal' },
+                { code: 'NL', name: 'Netherlands' },
+                { code: 'NC', name: 'New Caledonia' },
+                { code: 'NZ', name: 'New Zealand' },
+                { code: 'NI', name: 'Nicaragua' },
+                { code: 'NE', name: 'Niger' },
+                { code: 'NG', name: 'Nigeria' },
+                { code: 'NU', name: 'Niue' },
+                { code: 'NF', name: 'Norfolk Island' },
+                { code: 'MK', name: 'North Macedonia' },
+                { code: 'MP', name: 'Northern Mariana Islands' },
+                { code: 'NO', name: 'Norway' },
+                { code: 'OM', name: 'Oman' },
+                { code: 'PK', name: 'Pakistan' },
+                { code: 'PW', name: 'Palau' },
+                { code: 'PS', name: 'Palestine, State of' },
+                { code: 'PA', name: 'Panama' },
+                { code: 'PG', name: 'Papua New Guinea' },
+                { code: 'PY', name: 'Paraguay' },
+                { code: 'PE', name: 'Peru' },
+                { code: 'PH', name: 'Philippines' },
+                { code: 'PN', name: 'Pitcairn' },
+                { code: 'PL', name: 'Poland' },
+                { code: 'PT', name: 'Portugal' },
+                { code: 'PR', name: 'Puerto Rico' },
+                { code: 'QA', name: 'Qatar' },
+                { code: 'RE', name: 'Réunion' },
+                { code: 'RO', name: 'Romania' },
+                { code: 'RU', name: 'Russian Federation' },
+                { code: 'RW', name: 'Rwanda' },
+                { code: 'BL', name: 'Saint Barthélemy' },
+                { code: 'SH', name: 'Saint Helena, Ascension and Tristan da Cunha' },
+                { code: 'KN', name: 'Saint Kitts and Nevis' },
+                { code: 'LC', name: 'Saint Lucia' },
+                { code: 'MF', name: 'Saint Martin (French part)' },
+                { code: 'PM', name: 'Saint Pierre and Miquelon' },
+                { code: 'VC', name: 'Saint Vincent and the Grenadines' },
+                { code: 'WS', name: 'Samoa' },
+                { code: 'SM', name: 'San Marino' },
+                { code: 'ST', name: 'Sao Tome and Principe' },
+                { code: 'SA', name: 'Saudi Arabia' },
+                { code: 'SN', name: 'Senegal' },
+                { code: 'RS', name: 'Serbia' },
+                { code: 'SC', name: 'Seychelles' },
+                { code: 'SL', name: 'Sierra Leone' },
+                { code: 'SG', name: 'Singapore' },
+                { code: 'SX', name: 'Sint Maarten (Dutch part)' },
+                { code: 'SK', name: 'Slovakia' },
+                { code: 'SI', name: 'Slovenia' },
+                { code: 'SB', name: 'Solomon Islands' },
+                { code: 'SO', name: 'Somalia' },
+                { code: 'ZA', name: 'South Africa' },
+                { code: 'GS', name: 'South Georgia and the South Sandwich Islands' },
+                { code: 'SS', name: 'South Sudan' },
+                { code: 'ES', name: 'Spain' },
+                { code: 'LK', name: 'Sri Lanka' },
+                { code: 'SD', name: 'Sudan' },
+                { code: 'SR', name: 'Suriname' },
+                { code: 'SJ', name: 'Svalbard and Jan Mayen' },
+                { code: 'SE', name: 'Sweden' },
+                { code: 'CH', name: 'Switzerland' },
+                { code: 'SY', name: 'Syrian Arab Republic' },
+                { code: 'TW', name: 'Taiwan' },
+                { code: 'TJ', name: 'Tajikistan' },
+                { code: 'TZ', name: 'Tanzania' },
+                { code: 'TH', name: 'Thailand' },
+                { code: 'TL', name: 'Timor-Leste' },
+                { code: 'TG', name: 'Togo' },
+                { code: 'TK', name: 'Tokelau' },
+                { code: 'TO', name: 'Tonga' },
+                { code: 'TT', name: 'Trinidad and Tobago' },
+                { code: 'TN', name: 'Tunisia' },
+                { code: 'TR', name: 'Turkey' },
+                { code: 'TM', name: 'Turkmenistan' },
+                { code: 'TC', name: 'Turks and Caicos Islands' },
+                { code: 'TV', name: 'Tuvalu' },
+                { code: 'UG', name: 'Uganda' },
+                { code: 'UA', name: 'Ukraine' },
+                { code: 'AE', name: 'United Arab Emirates' },
+                { code: 'GB', name: 'United Kingdom' },
+                { code: 'US', name: 'United States' },
+                { code: 'UM', name: 'United States Minor Outlying Islands' },
+                { code: 'UY', name: 'Uruguay' },
+                { code: 'UZ', name: 'Uzbekistan' },
+                { code: 'VU', name: 'Vanuatu' },
+                { code: 'VE', name: 'Venezuela' },
+                { code: 'VN', name: 'Vietnam' },
+                { code: 'VG', name: 'Virgin Islands (British)' },
+                { code: 'VI', name: 'Virgin Islands (U.S.)' },
+                { code: 'WF', name: 'Wallis and Futuna' },
+                { code: 'EH', name: 'Western Sahara' },
+                { code: 'YE', name: 'Yemen' },
+                { code: 'ZM', name: 'Zambia' },
+                { code: 'ZW', name: 'Zimbabwe' }
+            ];
+
+            // Populate country dropdown
+            const countrySelect = document.getElementById('country');
+            countries.sort((a, b) => a.name.localeCompare(b.name)).forEach(country => {
+                const option = document.createElement('option');
+                option.value = country.code;
+                option.textContent = country.name;
+                countrySelect.appendChild(option);
+            });
+            
+            // Show loading animation when page loads
+            loadingOverlay.classList.add('active');
+            setTimeout(() => {
+                loadingOverlay.classList.remove('active');
+            }, 1500);
+            
+            // Form submission handling
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Show loading animation
+                loadingOverlay.classList.add('active');
+                
+                // Simulate form submission
+                setTimeout(() => {
+                    loadingOverlay.classList.remove('active');
+                    successMessage.classList.add('active');
+                    
+                    // Reset form
+                    form.reset();
+                }, 2000);
+            });
+            
+            // Help button functionality
+            helpButton.addEventListener('click', () => {
+                helpModal.classList.add('active');
+            });
+            
+            closeModal.addEventListener('click', () => {
+                helpModal.classList.remove('active');
+            });
+            
+            window.addEventListener('click', (e) => {
+                if (e.target === helpModal) {
+                    helpModal.classList.remove('active');
+                }
+            });
+            
+            // Intersection Observer for fade-in animations
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            fadeInElements.forEach(element => {
+                observer.observe(element);
+            });
+            
+            // Add animations to form sections on scroll
+            window.addEventListener('scroll', () => {
+                const scrollPosition = window.scrollY;
+                const sections = document.querySelectorAll('.form-section');
+                
+                sections.forEach((section, index) => {
+                    const sectionPosition = section.getBoundingClientRect().top;
+                    const screenPosition = window.innerHeight / 1.3;
+                    
+                    if (sectionPosition < screenPosition) {
+                        setTimeout(() => {
+                            section.style.transform = 'translateY(0)';
+                            section.style.opacity = '1';
+                        }, 200 * index);
+                    }
+                });
+            });
+            
+            // Initialize form sections with opacity
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.style.transform = 'translateY(30px)';
+                section.style.opacity = '0';
+                section.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
+            });
+            
+            // Add animation to form elements on focus
+            document.querySelectorAll('input, select, textarea').forEach(input => {
+                input.addEventListener('focus', () => {
+                    input.parentElement.style.transform = 'scale(1.02)';
+                    input.parentElement.style.boxShadow = '0 10px 30px rgba(93, 249, 192, 0.2)';
+                });
+                
+                input.addEventListener('blur', () => {
+                    input.parentElement.style.transform = 'scale(1)';
+                    input.parentElement.style.boxShadow = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

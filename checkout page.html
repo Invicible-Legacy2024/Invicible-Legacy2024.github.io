@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlockchainMall - Enhanced Checkout</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Segoe+UI:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --lime: #ECF1AF;
+            --leafy-green: #0A4646;
+            --cool-white: #D7E8FA;
+            --charcoal: #76542C;
+            --lime-green: #5DF9C0;
+            --ocean-blue: #3B1EFF;
+            --maroon: #3C1919;
+            --fresh-meat: #EEA39D;
+            --sandy: #FFD7C0;
+            --calm-white: #FBF1F0;
+            --cocoa: #966336;
+            --vibrant-orange: #E35314;
+            --navy-green: #164147;
+            --brass: #956D37;
+            --wood: #DDC09F;
+            --mocha: #2D2A24;
+            --card-bg-light: rgba(255, 255, 255, 0.15);
+            --card-border-light: rgba(255, 255, 255, 0.3);
+            --pop-up-bg: rgba(255, 255, 255, 0.1);
+            --pop-up-border: rgba(255, 255, 255, 0.3);
+            
+            --bg-primary: linear-gradient(135deg, var(--leafy-green) 0%, var(--navy-green) 50%, var(--mocha) 100%);
+            --text-primary: var(--calm-white);
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --card-border: rgba(255, 255, 255, 0.2);
+            --search-bg: rgba(255, 255, 255, 0.15);
+            --search-border: rgba(255, 255, 255, 0.3);
+            --search-text: var(--calm-white);
+            --icon-color: var(--lime-green);
+        }
+
+        body.light-mode {
+            --bg-primary: linear-gradient(135deg, #e0f7fa 0%, #f5f5f5 50%, #fafafa 100%);
+            --text-primary: #333333;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(0, 0, 0, 0.1);
+            --search-bg: rgba(255, 255, 255, 0.9);
+            --search-border: rgba(0, 0, 0, 0.1);
+            --search-text: #333333;
+            --icon-color: var(--ocean-blue);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 18px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            padding-top: 50px;
+            line-height: 1.7;
+            transition: background 0.5s ease, color 0.5s ease;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            padding: 30px;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', 'Segoe UI', sans-serif;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 25px;
+        }
+
+        .checkout-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .checkout-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .checkout-header h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(45deg, var(--lime), var(--lime-green), var(--vibrant-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+
+        .checkout-header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+        }
+
+        .order-summary {
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--lime-green);
+        }
+
+        .order-summary h3 {
+            color: var(--lime-green);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-summary h3 .cart-icon {
+            font-size: 1.8rem;
+            color: var(--vibrant-orange);
+        }
+
+        .order-items {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        .order-items li {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .order-items li:last-child {
+            border-bottom: none;
+        }
+
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding-top: 15px;
+            border-top: 2px solid rgba(93, 249, 192, 0.3);
+        }
+
+        .order-total .amount {
+            color: var(--lime);
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+        }
+
+        .form-section-title {
+            font-size: 1.8rem;
+            color: var(--lime-green);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(93, 249, 192, 0.3);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--sandy);
+        }
+
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            border-radius: 15px;
+            color: var(--calm-white);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--lime-green);
+            box-shadow: 0 0 0 4px rgba(93, 249, 192, 0.3);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .checkbox-group input {
+            width: 25px;
+            height: 25px;
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0;
+            font-weight: normal;
+            font-size: 1.1rem;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 22px;
+            background: linear-gradient(45deg, var(--lime-green), var(--ocean-blue));
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(59, 30, 255, 0.4);
+        }
+
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+            transition: all 0.4s ease;
+        }
+
+        .payment-option {
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--cool-white);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .payment-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: var(--lime-green);
+        }
+
+        .payment-option.active {
+            border-color: var(--lime-green);
+            background: rgba(93, 249, 192, 0.15);
+        }
+
+        .payment-option i {
+            font-size: 2.5rem;
+            color: var(--lime-green);
+        }
+
+        .payment-option.zarraz i { color: var(--vibrant-orange); }
+        .payment-option.crypto i { color: var(--ocean-blue); }
+        
+        .zarraz-logo {
+            width: 50px;
+            height: 50px;
+            background-image: url('https://i.postimg.cc/T1q2xJK6/logo.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .crypto-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            background-color: #26A17B;
+            padding: 5px;
+        }
+
+        .secure-notice {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            background: rgba(93, 249, 192, 0.1);
+            border-radius: 15px;
+            font-size: 1.1rem;
+        }
+
+        .secure-notice i {
+            color: var(--lime-green);
+            margin-right: 10px;
+        }
+
+        .floating-elements {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, var(--lime-green), transparent);
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, var(--vibrant-orange), transparent);
+            top: 60%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .floating-element:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, var(--ocean-blue), transparent);
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        .card-details-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .card-details-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .expiry-container {
+            position: relative;
+        }
+
+        .expiry-slash {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.6);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .expiry-input {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            letter-spacing: 10px;
+            padding-left: 28px;
+        }
+
+        .country-select-container {
+            position: relative;
+        }
+
+        .country-search {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 18px;
+            background: transparent;
+            border: none;
+            color: var(--calm-white);
+            font-size: 1.3rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .country-search:hover {
+            color: var(--lime-green);
+        }
+
+        /* Country search overlay */
+        .country-search-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 70, 70, 0.95);
+            backdrop-filter: blur(15px);
+            z-index: 999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .country-search-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .country-search-container {
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .close-search-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: var(--vibrant-orange);
+            font-size: 1.8rem;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .country-search-input {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--lime-green);
+            border-radius: 15px;
+            color: var(--calm-white);
+            font-size: 1.5rem;
+            width: 100%;
+            outline: none;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .country-search-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 4px rgba(93, 249, 192, 0.3);
+        }
+
+        .country-options-list {
+            max-height: 60vh;
+            overflow-y: auto;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .country-option {
+            padding: 18px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .country-option:last-child {
+            border-bottom: none;
+        }
+
+        .country-option:hover {
+            background: rgba(93, 249, 192, 0.15);
+        }
+
+        .country-flag {
+            font-size: 1.8rem;
+            width: 40px;
+            text-align: center;
+        }
+
+        .no-results {
+            padding: 30px;
+            text-align: center;
+            color: var(--vibrant-orange);
+            font-style: italic;
+            font-size: 1.3rem;
+        }
+
+        .change-payment-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: transparent;
+            border: none;
+            color: var(--lime-green);
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: all 0.3s;
+            z-index: 10;
+            display: none;
+        }
+        
+        .payment-option.active .change-payment-btn {
+            display: block;
+        }
+        
+        .change-payment-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .payment-options.single-mode {
+            grid-template-columns: 1fr;
+        }
+        
+        .payment-options.single-mode .payment-option:not(.active) {
+            display: none;
+        }
+        
+        /* State field container */
+        #state-container {
+            position: relative;
+        }
+        
+        #state-field {
+            position: relative;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.7;
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 900px) {
+            .payment-options:not(.single-mode) {
+                grid-template-columns: 1fr;
+            }
+            
+            .checkout-header h1 {
+                font-size: 2.8rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .checkout-header h1 {
+                font-size: 2.3rem;
+            }
+            
+            .form-group input, 
+            .form-group select {
+                font-size: 1.1rem;
+                padding: 15px;
+            }
+            
+            .submit-button {
+                font-size: 1.3rem;
+                padding: 18px;
+            }
+            
+            .expiry-slash {
+                font-size: 1.2rem;
+            }
+            
+            .country-search-container {
+                width: 95%;
+                padding: 15px;
+            }
+            
+            .country-search-input {
+                font-size: 1.2rem;
+                padding: 15px;
+            }
+            
+            .country-option {
+                font-size: 1.1rem;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+    </div>
+
+    <!-- Country search overlay -->
+    <div class="country-search-overlay" id="country-search-overlay">
+        <div class="country-search-container">
+            <button class="close-search-btn" id="close-search-btn">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 style="text-align: center; margin-bottom: 20px; color: var(--lime-green);">Select Country</h2>
+            <input type="text" class="country-search-input" id="country-search-input" placeholder="Search countries...">
+            <div class="country-options-list" id="country-options-list"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="checkout-container glass">
+            <div class="checkout-header">
+                <h1>Complete Your Purchase</h1>
+                <p>Enter your details to securely complete your transaction</p>
+            </div>
+            
+            <!-- Order Summary Section -->
+            <div class="order-summary">
+                <h3>Order Summary <i class="fas fa-shopping-cart cart-icon"></i></h3>
+                <ul class="order-items">
+                    <li>Blockchain Smartwatch <span>$249.99</span></li>
+                    <li>Crypto Mining Adapter <span>$89.99</span></li>
+                    <li>NFT Art Collection <span>$129.99</span></li>
+                    <li>Shipping <span>$14.99</span></li>
+                </ul>
+                <div class="order-total">
+                    <span>Total:</span>
+                    <span class="amount">$484.96</span>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3 class="form-section-title">Shipping Address</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="full-name">Full Name</label>
+                        <input type="text" id="full-name" placeholder="John Smith" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" placeholder="+1 (555) 123-4567" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="john@example.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="street-address">Street Address</label>
+                        <input type="text" id="street-address" placeholder="123 Main Street" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="apartment">Apartment / Suite / Unit / Floor</label>
+                        <input type="text" id="apartment" placeholder="Apt 4B">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="city">City / Town</label>
+                        <input type="text" id="city" placeholder="New York" required>
+                    </div>
+                    
+                    <!-- Moved country field above state field -->
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <div class="country-select-container">
+                            <select id="country" required>
+                                <option value="">Select Country</option>
+                                <!-- Countries will be populated dynamically -->
+                            </select>
+                            <button class="country-search" id="country-search-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- State field with container for dynamic content -->
+                    <div class="form-group" id="state-container">
+                        <label for="state">State / Province / Region</label>
+                        <div id="state-field">
+                            <input type="text" id="state" placeholder="New York" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="zip">ZIP / Postal Code</label>
+                        <input type="text" id="zip" placeholder="10001" required>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="save-address">
+                    <label for="save-address">Save as Default Shipping Address</label>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3 class="form-section-title">Payment Method</h3>
+                
+                <div class="payment-options" id="payment-options">
+                    <div class="payment-option cards">
+                        <button class="change-payment-btn" id="change-payment-btn">
+                            <i class="fas fa-exchange-alt"></i> Change
+                        </button>
+                        <i class="fas fa-credit-card"></i>
+                        <span>Credit/Debit Card</span>
+                    </div>
+                    
+                    <div class="payment-option zarraz">
+                        <div class="zarraz-logo"></div>
+                        <span>Zarraz Dollar</span>
+                    </div>
+                    
+                    <div class="payment-option crypto">
+                        <img src="https://i.postimg.cc/T1b9cKF4/Cryptocurrency-Tether-Usdt-Logo-Graphics-13393983-1-2993359185.jpg" alt="USDT" class="crypto-logo">
+                        <span>USDT</span>
+                    </div>
+                </div>
+                
+                <div class="card-details-section" id="card-details">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="card-name">Name on Card</label>
+                            <input type="text" id="card-name" placeholder="JOHN SMITH" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="card-number">Card Number</label>
+                            <input type="text" id="card-number" placeholder="0000 0000 0000 0000" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="expiry">Expiry Date</label>
+                            <div class="expiry-container">
+                                <span class="expiry-slash">/</span>
+                                <input type="text" id="expiry" class="expiry-input" placeholder="MMYY" required maxlength="5">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="cvv">CVV</label>
+                            <input type="text" id="cvv" placeholder="123" required maxlength="4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="submit-button">Complete Payment</button>
+            
+            <div class="secure-notice">
+                <i class="fas fa-lock"></i>
+                <span>Your transaction is secured with 256-bit SSL encryption</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Payment method selection
+            const paymentOptions = document.querySelectorAll('.payment-option');
+            const cardDetailsSection = document.getElementById('card-details');
+            const paymentOptionsContainer = document.getElementById('payment-options');
+            const changePaymentBtn = document.getElementById('change-payment-btn');
+            
+            // Country search elements
+            const countrySearchBtn = document.getElementById('country-search-btn');
+            const countrySearchOverlay = document.getElementById('country-search-overlay');
+            const countrySearchInput = document.getElementById('country-search-input');
+            const countryOptionsList = document.getElementById('country-options-list');
+            const closeSearchBtn = document.getElementById('close-search-btn');
+            const countrySelect = document.getElementById('country');
+            
+            // State field elements
+            const stateContainer = document.getElementById('state-field');
+            
+            // Show country search overlay
+            countrySearchBtn.addEventListener('click', () => {
+                countrySearchOverlay.classList.add('active');
+                setTimeout(() => countrySearchInput.focus(), 100);
+                filterCountries('');
+            });
+            
+            // Close country search overlay
+            closeSearchBtn.addEventListener('click', () => {
+                countrySearchOverlay.classList.remove('active');
+            });
+            
+            // Close overlay when clicking outside container
+            countrySearchOverlay.addEventListener('click', (e) => {
+                if (e.target === countrySearchOverlay) {
+                    countrySearchOverlay.classList.remove('active');
+                }
+            });
+            
+            // Full list of countries with flags (using emoji flags)
+            const allCountries = [
+                { code: 'US', name: 'United States', flag: '🇺🇸' },
+                { code: 'CA', name: 'Canada', flag: '🇨🇦' },
+                { code: 'GB', name: 'United Kingdom', flag: '🇬🇧' },
+                { code: 'AU', name: 'Australia', flag: '🇦🇺' },
+                { code: 'DE', name: 'Germany', flag: '🇩🇪' },
+                { code: 'FR', name: 'France', flag: '🇫🇷' },
+                { code: 'JP', name: 'Japan', flag: '🇯🇵' },
+                { code: 'CN', name: 'China', flag: '🇨🇳' },
+                { code: 'IN', name: 'India', flag: '🇮🇳' },
+                { code: 'BR', name: 'Brazil', flag: '🇧🇷' },
+                { code: 'MX', name: 'Mexico', flag: '🇲🇽' },
+                { code: 'ZA', name: 'South Africa', flag: '🇿🇦' },
+                { code: 'AR', name: 'Argentina', flag: '🇦🇷' },
+                { code: 'IT', name: 'Italy', flag: '🇮🇹' },
+                { code: 'ES', name: 'Spain', flag: '🇪🇸' },
+                { code: 'NL', name: 'Netherlands', flag: '🇳🇱' },
+                { code: 'SE', name: 'Sweden', flag: '🇸🇪' },
+                { code: 'NO', name: 'Norway', flag: '🇳🇴' },
+                { code: 'DK', name: 'Denmark', flag: '🇩🇰' },
+                { code: 'FI', name: 'Finland', flag: '🇫🇮' },
+                { code: 'RU', name: 'Russia', flag: '🇷🇺' },
+                { code: 'EG', name: 'Egypt', flag: '🇪🇬' },
+                { code: 'NG', name: 'Nigeria', flag: '🇳🇬' },
+                { code: 'KE', name: 'Kenya', flag: '🇰🇪' },
+                { code: 'SA', name: 'Saudi Arabia', flag: '🇸🇦' },
+                { code: 'AE', name: 'United Arab Emirates', flag: '🇦🇪' },
+                { code: 'KR', name: 'South Korea', flag: '🇰🇷' },
+                { code: 'SG', name: 'Singapore', flag: '🇸🇬' },
+                { code: 'NZ', name: 'New Zealand', flag: '🇳🇿' },
+                { code: 'CL', name: 'Chile', flag: '🇨🇱' },
+                { code: 'CO', name: 'Colombia', flag: '🇨🇴' },
+                { code: 'PE', name: 'Peru', flag: '🇵🇪' },
+                { code: 'VE', name: 'Venezuela', flag: '🇻🇪' },
+                { code: 'PT', name: 'Portugal', flag: '🇵🇹' },
+                { code: 'GR', name: 'Greece', flag: '🇬🇷' },
+                { code: 'TR', name: 'Turkey', flag: '🇹🇷' },
+                { code: 'TH', name: 'Thailand', flag: '🇹🇭' },
+                { code: 'ID', name: 'Indonesia', flag: '🇮🇩' },
+                { code: 'MY', name: 'Malaysia', flag: '🇲🇾' },
+                { code: 'PH', name: 'Philippines', flag: '🇵🇭' },
+                { code: 'VN', name: 'Vietnam', flag: '🇻🇳' },
+                { code: 'CH', name: 'Switzerland', flag: '🇨🇭' },
+                { code: 'BE', name: 'Belgium', flag: '🇧🇪' },
+                { code: 'AT', name: 'Austria', flag: '🇦🇹' },
+                { code: 'IE', name: 'Ireland', flag: '🇮🇪' },
+                { code: 'PL', name: 'Poland', flag: '🇵🇱' },
+                { code: 'HU', name: 'Hungary', flag: '🇭🇺' },
+                { code: 'RO', name: 'Romania', flag: '🇷🇴' },
+                { code: 'CZ', name: 'Czech Republic', flag: '🇨🇿' },
+                { code: 'SK', name: 'Slovakia', flag: '🇸🇰' },
+                { code: 'BG', name: 'Bulgaria', flag: '🇧🇬' },
+                { code: 'HR', name: 'Croatia', flag: '🇭🇷' },
+                { code: 'SI', name: 'Slovenia', flag: '🇸🇮' },
+                { code: 'LT', name: 'Lithuania', flag: '🇱🇹' },
+                { code: 'LV', name: 'Latvia', flag: '🇱🇻' },
+                { code: 'EE', name: 'Estonia', flag: '🇪🇪' },
+                { code: 'CY', name: 'Cyprus', flag: '🇨🇾' },
+                { code: 'MT', name: 'Malta', flag: '🇲🇹' },
+                { code: 'IS', name: 'Iceland', flag: '🇮🇸' },
+                { code: 'LU', name: 'Luxembourg', flag: '🇱🇺' }
+            ];
+            
+            // Populate the country select
+            allCountries.forEach(country => {
+                const option = document.createElement('option');
+                option.value = country.code;
+                option.textContent = country.name;
+                countrySelect.appendChild(option);
+            });
+            
+            // Function to filter and display countries
+            function filterCountries(searchTerm) {
+                countryOptionsList.innerHTML = '';
+                
+                const filtered = allCountries.filter(country => 
+                    country.name.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+                
+                if (filtered.length === 0) {
+                    const noResults = document.createElement('div');
+                    noResults.className = 'no-results';
+                    noResults.textContent = 'No countries found';
+                    countryOptionsList.appendChild(noResults);
+                    return;
+                }
+                
+                filtered.forEach(country => {
+                    const option = document.createElement('div');
+                    option.className = 'country-option';
+                    option.innerHTML = `
+                        <span class="country-flag">${country.flag}</span>
+                        <span>${country.name}</span>
+                    `;
+                    option.addEventListener('click', () => {
+                        countrySelect.value = country.code;
+                        countrySearchOverlay.classList.remove('active');
+                        // Reset search input
+                        countrySearchInput.value = '';
+                        // Update state field based on country
+                        updateStateField(country.code);
+                    });
+                    countryOptionsList.appendChild(option);
+                    
+                    // Add animation
+                    setTimeout(() => {
+                        option.style.animation = 'slideIn 0.3s ease forwards';
+                    }, 50);
+                });
+            }
+            
+            // Filter countries as user types
+            countrySearchInput.addEventListener('input', function() {
+                filterCountries(this.value);
+            });
+            
+            // Payment options functionality
+            paymentOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove active class from all options
+                    paymentOptions.forEach(opt => opt.classList.remove('active'));
+                    
+                    // Add active class to clicked option
+                    this.classList.add('active');
+                    
+                    // Show/hide card details based on selected payment method
+                    if (this.classList.contains('cards')) {
+                        cardDetailsSection.classList.add('active');
+                        // Enter single mode (hide other payment options)
+                        paymentOptionsContainer.classList.add('single-mode');
+                    } else {
+                        cardDetailsSection.classList.remove('active');
+                        // Exit single mode
+                        paymentOptionsContainer.classList.remove('single-mode');
+                    }
+                });
+            });
+            
+            // Change payment button functionality
+            changePaymentBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                // Exit single mode and show all options
+                paymentOptionsContainer.classList.remove('single-mode');
+                // Remove active class from all options
+                paymentOptions.forEach(opt => opt.classList.remove('active'));
+                // Hide card details
+                cardDetailsSection.classList.remove('active');
+            });
+            
+            // Enhanced expiry date field with auto slash
+            const expiryInput = document.getElementById('expiry');
+            
+            expiryInput.addEventListener('input', function(e) {
+                // Remove any non-numeric characters
+                let value = this.value.replace(/\D/g, '');
+                
+                // Format as MM/YY when user types
+                if (value.length > 2) {
+                    value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                }
+                
+                this.value = value;
+            });
+            
+            // Form validation on submit
+            const checkoutForm = document.querySelector('.checkout-container');
+            const submitButton = document.querySelector('.submit-button');
+            
+            submitButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Basic validation
+                let isValid = true;
+                const requiredFields = document.querySelectorAll('input[required], select[required]');
+                
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        isValid = false;
+                        field.style.borderColor = 'var(--vibrant-orange)';
+                        
+                        // Reset border color when user starts typing
+                        field.addEventListener('input', () => {
+                            field.style.borderColor = 'rgba(255, 255, 255, 0.25)';
+                        });
+                    }
+                });
+                
+                if (isValid) {
+                    // Simulate successful payment
+                    submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                    submitButton.disabled = true;
+                    
+                    setTimeout(() => {
+                        submitButton.innerHTML = '<i class="fas fa-check"></i> Payment Successful!';
+                        submitButton.style.background = 'var(--leafy-green)';
+                        
+                        // Show confirmation message
+                        const confirmation = document.createElement('div');
+                        confirmation.className = 'secure-notice';
+                        confirmation.style.background = 'rgba(93, 249, 192, 0.2)';
+                        confirmation.style.marginTop = '20px';
+                        confirmation.innerHTML = `
+                            <i class="fas fa-check-circle"></i>
+                            <span>Your order has been placed successfully! Redirecting to order confirmation...</span>
+                        `;
+                        checkoutForm.appendChild(confirmation);
+                        
+                        // Redirect after delay
+                        setTimeout(() => {
+                            window.location.href = 'order-confirmation.html';
+                        }, 2000);
+                    }, 2000);
+                } else {
+                    // Show error message
+                    const errorNotice = document.createElement('div');
+                    errorNotice.className = 'secure-notice';
+                    errorNotice.style.background = 'rgba(227, 83, 20, 0.2)';
+                    errorNotice.style.marginTop = '20px';
+                    errorNotice.innerHTML = `
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>Please fill in all required fields</span>
+                    `;
+                    
+                    // Remove existing error if any
+                    const existingError = document.querySelector('.secure-notice.error');
+                    if (existingError) existingError.remove();
+                    
+                    errorNotice.classList.add('error');
+                    checkoutForm.appendChild(errorNotice);
+                }
+            });
+            
+            // ================== STATE FIELD LOGIC ==================
+            
+            // List of countries with predefined states
+            const countriesWithStates = ['US', 'AU', 'NG'];
+            
+            // Define states for each country
+            const countryStates = {
+                'US': [
+                    { code: 'AL', name: 'Alabama' },
+                    { code: 'AK', name: 'Alaska' },
+                    { code: 'AZ', name: 'Arizona' },
+                    { code: 'AR', name: 'Arkansas' },
+                    { code: 'CA', name: 'California' },
+                    { code: 'CO', name: 'Colorado' },
+                    { code: 'CT', name: 'Connecticut' },
+                    { code: 'DE', name: 'Delaware' },
+                    { code: 'FL', name: 'Florida' },
+                    { code: 'GA', name: 'Georgia' }
+                ],
+                'AU': [
+                    { code: 'NSW', name: 'New South Wales' },
+                    { code: 'QLD', name: 'Queensland' },
+                    { code: 'SA', name: 'South Australia' },
+                    { code: 'TAS', name: 'Tasmania' },
+                    { code: 'VIC', name: 'Victoria' },
+                    { code: 'WA', name: 'Western Australia' }
+                ],
+                'NG': [
+                    { code: 'AB', name: 'Abia' },
+                    { code: 'AD', name: 'Adamawa' },
+                    { code: 'AK', name: 'Akwa Ibom' },
+                    { code: 'AN', name: 'Anambra' },
+                    { code: 'BA', name: 'Bauchi' },
+                    { code: 'BY', name: 'Bayelsa' },
+                    { code: 'BE', name: 'Benue' },
+                    { code: 'BO', name: 'Borno' },
+                    { code: 'CR', name: 'Cross River' },
+                    { code: 'DE', name: 'Delta' }
+                ]
+            };
+            
+            // Function to update the state field based on selected country
+            function updateStateField(countryCode) {
+                const stateField = document.getElementById('state-field');
+                
+                // Clear existing content
+                stateField.innerHTML = '';
+                
+                // Create the appropriate input based on country
+                if (countriesWithStates.includes(countryCode)) {
+                    // Create select element for countries with states
+                    const select = document.createElement('select');
+                    select.id = 'state';
+                    select.required = true;
+                    
+                    // Add placeholder option
+                    const placeholder = document.createElement('option');
+                    placeholder.value = '';
+                    placeholder.textContent = 'Select State';
+                    placeholder.disabled = true;
+                    placeholder.selected = true;
+                    select.appendChild(placeholder);
+                    
+                    // Add state options
+                    countryStates[countryCode].forEach(state => {
+                        const option = document.createElement('option');
+                        option.value = state.code;
+                        option.textContent = state.name;
+                        select.appendChild(option);
+                    });
+                    
+                    stateField.appendChild(select);
+                } else {
+                    // Create text input for other countries
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.id = 'state';
+                    input.placeholder = 'State / Province / Region';
+                    input.required = true;
+                    stateField.appendChild(input);
+                }
+            }
+            
+            // Listen for country changes
+            countrySelect.addEventListener('change', function() {
+                updateStateField(this.value);
+            });
+            
+            // Initialize the state field on page load
+            if (countrySelect.value) {
+                updateStateField(countrySelect.value);
+            }
+        });
+    </script>
+</body>
+</html>
